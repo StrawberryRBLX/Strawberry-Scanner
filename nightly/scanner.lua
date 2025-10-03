@@ -385,9 +385,11 @@ local script = STRW["16"];
 		if rmevent:IsA("RemoteEvent") then --# Check if it is a remote event
 			rmevent:FireServer(TestPart)
 		elseif rmevent:IsA("RemoteFunction") then --# YES, ADDED SUPPORT FOR REMOTE FUNCTIONS, FINALLY
-			pcall(function()
-				rmevent:InvokeServer(TestPart)
-			end)
+			coroutine.wrap(function()
+				local success, result = pcall(function()
+					rmevent:InvokeServer(TestPart)
+				end)
+			end)()
 		end
 	
 		local t = tick()

@@ -21,6 +21,7 @@ local function damage(hit)
 end
 ```
 It might be hard to find depending on how big the script is but if you have some basic ROBLOX Luau experience then it's gonna be easy
+
 4. Remove and replace all the "Humanoid.Health = 0" scripts with the delete function, examples below:
 ```lua
 Delete(hit.Head)

@@ -390,7 +390,7 @@ local script = G2L["16"];
 					VulnRemote.Name = "StrawberryHookedRM"
 					VulnRemote.Value = CurrentVulnerableRemote
 	
-					loadstring(game:HttpGet("https://raw.githubusercontent.com/StrawberryRBLX/Strawberry-Scanner/refs/heads/main/release/commands.lua"))() -- loads up the commands script
+					loadstring(game:HttpGet("https://raw.githubusercontent.com/StrawberryRBLX/Strawberry-Scanner/refs/heads/main/release/OLD_commands.lua"))() -- loads up the commands script
 					task.wait(1) -- waits before removing the scanner UI
 					script.Parent.Parent:Destroy() -- removes the scanner UI
 				end)

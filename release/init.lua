@@ -91,12 +91,15 @@ local runservice = game:GetService("RunService")
 local uis = game:GetService("UserInputService")
 local tween = game:GetService("TweenService")
 local debris = game:GetService("Debris")
+local teams = game:GetService("Teams")
+local storage = game:GetService("ReplicatedStorage")
 local TTC = game:GetService("TextChatService"):FindFirstChild("TextChatCommands")
 
 --// LocalPlayer
 local camera = workspace:FindFirstChild("Camera")
 local player = players.LocalPlayer
 local char = player.Character or player.CharacterAdded:Wait()
+local humanoid = char:WaitForChild("Humanoid",1)
 local mouse = player:GetMouse()
 local limbs = {
 	head = char:WaitForChild("Head",3),
@@ -131,6 +134,7 @@ local limbs = {
 local ismobile = uis.TouchEnabled
 player.CharacterAdded:Connect(function(c)
 	char = c
+	humanoid = c:FindFirstChild("Humanoid")
 end)
 
 --// Gui
@@ -248,7 +252,7 @@ scroll_cmdlist.Size = UDim2.new(1,0,1,-50)
 scroll_cmdlist.Position = UDim2.new(0,0,0,50)
 scroll_cmdlist.BackgroundTransparency = 1
 scroll_cmdlist.BorderSizePixel = 0
-scroll_cmdlist.ScrollBarThickness = 8
+scroll_cmdlist.ScrollBarThickness = 0
 scroll_cmdlist.BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png"
 scroll_cmdlist.TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png"
 scroll_cmdlist.AutomaticCanvasSize = Enum.AutomaticSize.Y
@@ -612,72 +616,10 @@ local loopkill = {}
 local slock = false
 
 local commands = {
---[[   THIS DOES NOT WORK FOR UNKNOWN REASON WILL WORK ON LATER
-	{
-		name = "KillAura",
-		desc = "Description coming soon!",
-		code = function(onoroff)
-
-			local partsize = 10
-			local killauraactive = true 
-			local killaurapart
-			if onoroff == "off" then killauraactive=false end
-			if onoroff == "on" then 
-
-				print("Kill aura activated!")
-				local lp: Player = game:GetService("Players").LocalPlayer
-				if not lp then return end
-				local char = lp.Character
-				if not char or not char:FindFirstChild("HumanoidRootPart") then return end
-
-				if not killauraactive then
-					if killaurapart and killaurapart.Parent then
-						killaurapart:Destroy()
-						killaurapart = nil
-					end
-					return
-				end
-
-				if killaurapart and killaurapart.Parent then
-					killaurapart:Destroy()
-				end
-
-				local part = Instance.new("Part")
-				part.Size = Vector3.new(partsize, partsize, partsize)
-				part.Transparency = 0.5
-				part.BrickColor = BrickColor.new("Bright red")
-				part.Material = Enum.Material.Neon
-				part.Shape = Enum.PartType.Ball
-				part.Anchored = false
-				part.CanCollide = false
-				part.Name = "Strawberry_Killaura123"
-				part.CFrame = char.HumanoidRootPart.CFrame
-				part.Parent = workspace
-
-				local weld = Instance.new("WeldConstraint")
-				weld.Part0 = char.HumanoidRootPart
-				weld.Part1 = part
-				weld.Parent = part
-				part.Touched:Connect(function(hit)
-					local plr = game:GetService("Players"):GetPlayerFromCharacter(hit.Parent)
-					if plr and plr ~= lp then
-						local head = plr.Character and plr.Character:FindFirstChild("Head")
-						if head then
-							delete(head)
-							return
-						end
-					end
-				end)
-				killaurapart = part
-			end	
-		end,
-	},
---]]
 	{
 		name = "Kill",
 		desc = "Description coming soon!",
 		code = function(strin)
-			print(strin)
 			local targetlist = findtargets(strin) or {}
 			for _, plr in ipairs(targetlist) do
 				if plr and plr.Character then
@@ -814,6 +756,160 @@ local commands = {
 		end,
 	},
 	{
+		name = "NoSeats",
+		desc = "Description coming soon!",
+		code = function()
+			for _, inst in pairs(workspace:GetDescendants()) do
+				if inst:IsA("Seat") then
+					delete(inst)
+				end
+			end
+		end,
+	},
+	{
+		name = "NoSounds",
+		desc = "Description coming soon!",
+		code = function()
+			for _, inst in pairs(game:GetDescendants()) do
+				if inst:IsA("Sound") then
+					delete(inst)
+				end
+			end
+		end,
+	},
+	{
+		name = "NoTeams",
+		desc = "Description coming soon!",
+		code = function()
+			for _, inst in pairs(teams:GetDescendants()) do
+				if inst:IsA("Team") then
+					delete(inst)
+				end
+			end
+		end,
+	},
+	{
+		name = "NoStats",
+		desc = "Description coming soon!",
+		code = function(string)
+			local targetlist = findtargets(string)
+			for _, plr in pairs(targetlist) do
+				if plr:FindFirstChild("leaderstats") then
+					delete(plr:FindFirstChild("leaderstats"))
+				end
+			end
+		end,
+	},
+	{
+		name = "NoStats",
+		desc = "Description coming soon!",
+		code = function(string)
+			local targetlist = findtargets(string)
+			for _, plr in pairs(targetlist) do
+				if plr:FindFirstChild("leaderstats") then
+					delete(plr:FindFirstChild("leaderstats"))
+				end
+			end
+		end,
+	},
+	{
+		name = "NoSpawns",
+		desc = "Description coming soon!",
+		code = function()
+			for _, inst in pairs(workspace:GetDescendants()) do
+				if inst:IsA("SpawnLocation") then
+					delete(inst)
+				end
+			end
+		end,
+	},
+	{
+		name = "NoTextures",
+		desc = "Description coming soon!",
+		code = function()
+			for _, inst in pairs(workspace:GetDescendants()) do
+				if inst:IsA("Decal") or inst:IsA("Texture") then
+					delete(inst)
+				end
+			end
+		end,
+	},
+	{
+		name = "UnweldWS",
+		desc = "Description coming soon!",
+		code = function()
+			for _, inst in pairs(workspace:GetDescendants()) do
+				if inst:IsA("Weld") then
+					delete(inst)
+				end
+			end
+		end,
+	},
+	{
+		name = "UnconstraintWS",
+		desc = "Description coming soon!",
+		code = function()
+			for _, inst in pairs(workspace:GetDescendants()) do
+				if inst:IsA("Constraint") then
+					delete(inst)
+				end
+			end
+		end,
+	},
+	{
+		name = "ClearWS",
+		desc = "Description coming soon!",
+		code = function()
+			for _, inst in pairs(workspace:GetDescendants()) do
+				delete(inst)
+			end
+		end,
+	},
+	{
+		name = "ClearLighting",
+		desc = "Description coming soon!",
+		code = function()
+			for _, inst in pairs(lighting:GetDescendants()) do
+				delete(inst)
+			end
+		end,
+	},
+	{
+		name = "ClearPGui",
+		desc = "Description coming soon!",
+		code = function()
+			for _, inst in pairs(playergui:GetDescendants()) do
+				delete(inst)
+			end
+		end,
+	},
+	{
+		name = "ClearStorage",
+		desc = "Description coming soon!",
+		code = function()
+			for _, inst in pairs(storage:GetDescendants()) do
+				delete(inst)
+			end
+		end,
+	},
+	{
+		name = "WS",
+		desc = "Description coming soon!",
+		code = function(int)
+			local int = tonumber(int)
+			humanoid.WalkSpeed = int
+		end,
+	},
+	{
+		name = "JP",
+		desc = "Description coming soon!",
+		code = function(int)
+			local int = tonumber(int)
+			humanoid.UseJumpPower = true
+			humanoid.JumpPower = int
+		end,
+	},
+	{
 		name = "Korblox",
 		desc = "Description coming soon!",
 		code = function(string)
@@ -919,7 +1015,7 @@ local commands = {
 		end,
 	},
 	{
-		name = "RemovePlrTools",
+		name = "RemoveTools",
 		desc = "Description coming soon!",
 		code = function(string)
 			local target = findtargets(string)
@@ -1175,7 +1271,9 @@ textbox.FocusLost:Connect(function(enter)
 
 		for _, command in ipairs(commands) do
 			if command.name:lower() == cmdname then
-				command.code(unpack(args))
+				task.spawn(function()
+					command.code(unpack(args))
+				end)
 				return
 			end
 		end

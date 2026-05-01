@@ -31,9 +31,9 @@
    
    Credits:
      C:\Drive: Re-making the scanner, making the new ui and commands.
-     Saji: Commands and Base Scanner
-     Ghost.: Chat commmands, command fixing, and importing.
-     Hailey: Fixing the "findtargets" function (since I made it at night lol)
+     Saji Commands and Base Scanner
+     Ghost. Chat commmands, command fixing, and importing.
+     Hailey Fixing the "findtargets" function (since I made it at night lol)
      
    .gg/txsR9w5bUD <--- Official server for StrawberryCMD
 ]]--
@@ -343,7 +343,7 @@ uis.InputBegan:Connect(function(input, processed)
 end)
 
 if ismobile then
-	local mobilebtn: TextButton = gui:WaitForChild("MobileOpen",5)
+	local mobilebtn = gui:WaitForChild("MobileOpen",5)
 	mobilebtn.TouchTap:Connect(function()
 		if debounce then return end
 		debounce = true
@@ -425,7 +425,7 @@ local function notification(description, duration)
 end
 
 
-local function checkremote(remote: RemoteEvent | RemoteFunction)
+local function checkremote(remote)
 	for _, str in ipairs(config.blacklisted_strings) do
 		if string.find(remote.Name:lower(), str:lower()) then
 			return false
@@ -453,7 +453,7 @@ local function isdestroyed()
 	return not config.test_part:IsDescendantOf(game)
 end
 
-local function testremote(remote: RemoteEvent | RemoteFunction)
+local function testremote(remote)
 	pcall(function()
 		if remote:IsA("RemoteEvent") then
 			remote:FireServer(config.test_part)
@@ -488,7 +488,7 @@ coroutine.wrap(function()
 	until config.found_vuln
 end)()
 
-for _, remote: RemoteEvent | RemoteFunction in ipairs(game:GetDescendants()) do
+for _, remote in ipairs(game:GetDescendants()) do
 	if remote.Parent == nil then continue end
 	if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
 		if checkremote(remote) then
